@@ -1,4 +1,4 @@
-nvim/plugged
+nvim/plugged/*
 
 .idea
 .DS_Store
