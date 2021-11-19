@@ -3,6 +3,7 @@ call plug#begin('~/.config/nvim/plugged')
 " LSP & Autocomplete
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
+
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -15,14 +16,16 @@ Plug 'nvim-telescope/telescope.nvim'
 " UI stuffs
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'akinsho/bufferline.nvim'
-Plug 'preservim/nerdtree'
-Plug 'kassio/neoterm'
+
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'kyazdani42/nvim-tree.lua'
 
 " Syntax highlight
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+"Plug 'fatih/vim-go'
 
 " Just theme
-Plug 'doums/darcula'
+Plug 'mhartington/oceanic-next'
 
 call plug#end()
 
@@ -40,7 +43,7 @@ set number relativenumber
 
 set termguicolors
 
-colorscheme darcula
+colorscheme OceanicNext
 
 " Remap
 nnoremap <C-n> :bnext<CR>
@@ -54,11 +57,7 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " Complex configs
 lua require("cmp_lsp")
 lua require("treesitter")
-
-" NerdTree
-let NERDTreeShowHidden=1
-autocmd vimenter * NERDTree | wincmd p
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+lua require("nvim_tree")
 
 " Simple configs
 lua require('lualine').setup()
