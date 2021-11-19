@@ -34,11 +34,11 @@ require('nvim-tree').setup {
     custom = {}
   },
   view = {
-    width = 30,
+    width = 50,
     height = 30,
-    hide_root_folder = flse,
+    hide_root_folder = false,
     side = 'left',
-    auto_resize = false,
+    auto_resize = true,
     mappings = {
       custom_only = false,
       list = {}

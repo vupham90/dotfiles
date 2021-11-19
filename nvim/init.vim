@@ -22,7 +22,6 @@ Plug 'kyazdani42/nvim-tree.lua'
 
 " Syntax highlight
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-"Plug 'fatih/vim-go'
 
 " Just theme
 Plug 'mhartington/oceanic-next'
@@ -42,6 +41,9 @@ set shiftwidth=4
 set number relativenumber
 
 set termguicolors
+set lazyredraw
+set splitright
+set splitbelow
 
 colorscheme OceanicNext
 
@@ -58,9 +60,45 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 lua require("cmp_lsp")
 lua require("treesitter")
 lua require("nvim_tree")
+nnoremap <leader-t> :NvimTreeToggle<CR>
 
 " Simple configs
-lua require('lualine').setup()
+lua << EOF
+require'lualine'.setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {},
+    always_divide_middle = true,
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff',
+                  {'diagnostics', sources={'nvim_lsp', 'coc'}}},
+    lualine_c = {
+		{
+			'filename',
+			path = 1
+		}
+	},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {}
+}
+EOF
 lua require("bufferline").setup()
 
 let g:term_buf = 0
