@@ -431,6 +431,8 @@ shell:
   program: /bin/zsh
   args:
     - --login
+    - -c
+    - "tmux attach || tmux"
 
 # Startup directory
 #
