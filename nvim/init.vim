@@ -20,6 +20,8 @@ Plug 'akinsho/bufferline.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kyazdani42/nvim-tree.lua'
 
+Plug 'tpope/vim-fugitive'
+
 " Syntax highlight
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
@@ -44,7 +46,8 @@ set termguicolors
 set lazyredraw
 set splitright
 set splitbelow
-
+set autoread
+au CursorHold * checktime
 colorscheme OceanicNext
 
 " Remap

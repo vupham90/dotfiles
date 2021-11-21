@@ -1,3 +1,5 @@
+vim.g.nvim_tree_refresh_wait = 500
+
 require('nvim-tree').setup {
   disable_netrw       = true,
   hijack_netrw        = true,
