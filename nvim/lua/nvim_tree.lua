@@ -1,5 +1,3 @@
-vim.g.nvim_tree_refresh_wait = 500
-
 require('nvim-tree').setup {
   disable_netrw       = true,
   hijack_netrw        = true,
@@ -14,7 +12,7 @@ require('nvim-tree').setup {
     auto_open = true,
   },
   diagnostics = {
-    enable = false,
+    enable = true,
     icons = {
       hint = "",
       info = "",
@@ -23,7 +21,7 @@ require('nvim-tree').setup {
     }
   },
   update_focused_file = {
-    enable      = false,
+    enable      = true,
     update_cwd  = false,
     ignore_list = {}
   },

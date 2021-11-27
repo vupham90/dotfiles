@@ -1,0 +1,296 @@
+" Plugin
+call plug#begin()
+
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/lsp_extensions.nvim'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+
+Plug 'ibhagwan/fzf-lua'
+Plug 'vijaymarupudi/nvim-fzf'
+
+Plug 'svermeulen/vim-easyclip'
+
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'hoob3rt/lualine.nvim'
+Plug 'kyazdani42/nvim-tree.lua'
+
+call plug#end()
+
+" =========
+" Essential
+" =========
+
+syntax on
+filetype plugin indent on
+
+let mapleader = "\\"
+
+set cursorline
+set autowrite
+set autoread
+set hidden
+set nobackup
+set nowritebackup
+set ruler
+set signcolumn=yes
+set number relativenumber
+set encoding=UTF-8
+set mouse=a
+
+" Search
+set hlsearch
+set incsearch
+set ignorecase
+set smartcase
+set gdefault
+
+" Split
+set splitright
+set splitbelow
+
+" Auto reload file
+au CursorHold * checktime
+
+" ======
+" Editor
+" ======
+
+" Easy to clear highlight
+nnoremap <silent> <esc> :nohlsearch<cr>
+vnoremap <silent> <esc> :nohlsearch<cr>
+
+" Column ruler 
+let &colorcolumn="80,".join(range(120,999),",")
+set colorcolumn=80
+
+" Jump to start and end of line 
+map H ^
+map L $
+
+" ; as :
+nnoremap ; :
+
+" Very magic by default
+nnoremap ? ?\v
+nnoremap / /\v
+cnoremap %s/ %sm/
+
+" Move by line
+nnoremap j gj
+nnoremap k gk
+
+" Left and right to switch buffers
+nnoremap <left> :bp<CR>
+nnoremap <right> :bn<CR>
+
+" Open new file adjacent to current file
+nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+" Use the space key to toggle folds
+nnoremap <space> za
+vnoremap <space> zf
+
+" Clipboard
+if has("clipboard")
+  set clipboard=unnamed " system clipboard
+  if has("unnamedplus") " X11
+    set clipboard+=unnamedplus
+  endif
+endif
+
+" Undo history
+if has('persistent_undo')
+  let &undodir = expand('$HOME/.vim' . '/undodir') 
+  silent call system('mkdir -p ' . &undodir)
+  set undofile
+endif
+
+" Leave paste mode when leaving insert mode
+autocmd InsertLeave * set nopaste
+
+" ===
+" UI
+" ===
+
+" Color
+set rtp+=~/.config/base16-vim/
+let base16colorspace=256
+let g:base16_shell_path="~/.config/base16-shell/s/"
+set background=dark
+colorscheme base16-gruvbox-dark-hard
+
+" Better display and experience for diagnostic/messages 
+set cmdheight=2
+set updatetime=300 
+" Remove toolbar
+set guioptions-=T 
+" No more beeps
+set vb t_vb= 
+" Backspace over newlines
+set backspace=2 
+set nofoldenable
+set ttyfast
+set lazyredraw
+set synmaxcol=500
+set laststatus=2
+set tabstop=2 shiftwidth=2 expandtab
+" Show (partial) command in status line.
+set showcmd 
+" Don't give |ins-completion-menu| messages.
+set shortmess+=c 
+set wrap
+set linebreak
+" Better completion
+" menuone: popup even when there's only one match
+" noinsert: do not insert text until a selection is made
+" noselect: do not select, force user to select one from the menu
+set completeopt=menu,menuone,noselect
+
+" ===
+" LSP
+" ===
+
+lua << END
+nvim_lsp = require('lspconfig')
+
+-- Use an on_attach function to only map the following keys
+-- after the language server attaches to the current buffer
+lsp_on_attach = function(client, bufnr)
+  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+  local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+  -- Enable completion triggered by <c-x><c-o>
+  buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+  -- Mappings.
+  local opts = { noremap=true, silent=true }
+
+  -- See `:help vim.lsp.*` for documentation on any of the below functions
+  buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', '<C-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+  -- Autoformat on save
+  -- FormattingOptions https://microsoft.github.io/language-server-protocol/specification
+  if client.resolved_capabilities.document_formatting then
+    vim.cmd [[augroup Format]]
+    vim.cmd [[autocmd! * <buffer>]]
+    vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync(nil, 200)]]
+    vim.cmd [[augroup END]]
+  end
+end
+
+-- lsp completion
+local cmp = require'cmp'
+cmp.setup {
+  mapping = {
+    ['<Tab>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 's' }),
+    ['<C-y>'] = cmp.config.disable, 
+    ['<CR>'] = cmp.mapping.confirm({ select = true }),
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'buffer' }
+  }
+}
+
+local capabilities = require'cmp_nvim_lsp'.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+-- attach lsp server
+local servers = { 'rust_analyzer', 'gopls' }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup {
+    on_attach = lsp_on_attach,
+    capabilities = capabilities,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+end
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    virtual_text = true,
+    signs = true,
+    update_in_insert = true,
+  }
+)
+
+-- Enable type inlay hint
+require'lsp_extensions'.inlay_hints{
+  enabled = {"TypeHint", "ChainingHint", "ParameterHint"},
+}
+
+END
+
+" ====
+" Util
+" ====
+
+" Files fuzzy
+lua << EOF
+require'fzf-lua'.setup{
+  fzf_bin = 'sk',
+  grep = {
+    bin = 'rg',
+    file_icons = false,
+    git_icons = false,
+    color_icons = false,
+  },
+  files = {
+    bin = 'fd',
+    file_icons = false,
+    git_icons = false,
+    color_icons = false,
+  },
+}
+
+-- <C-p> files
+vim.api.nvim_set_keymap('n', '<c-p>',
+    "<cmd>lua require('fzf-lua').files()<CR>",
+    { noremap = true, silent = true })
+-- <leader-s> search
+vim.api.nvim_set_keymap('n', '<leader>s',
+    "<cmd>lua require('fzf-lua').grep()<CR>",
+    { noremap = true, silent = true })
+EOF
+
+" Statusline
+lua << EOF
+require'lualine'.setup()
+EOF
+
+" Filetree
+lua << EOF
+vim.g.nvim_tree_show_icons = {folders = 1, files = 1, folder_arrows = 1}
+vim.g.nvim_tree_git_hl = 0
+vim.g.nvim_tree_gitignore = 0
+
+require'nvim-tree'.setup() 
+
+vim.api.nvim_set_keymap('n', '-',
+    "<cmd>NvimTreeFindFile<CR>",
+    { noremap = true, silent = true })
+EOF

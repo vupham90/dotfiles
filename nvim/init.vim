@@ -26,7 +26,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Just theme
-Plug 'mhartington/oceanic-next'
+Plug 'ayu-theme/ayu-vim'
 
 call plug#end()
 
@@ -46,24 +46,39 @@ set termguicolors
 set lazyredraw
 set splitright
 set splitbelow
+
 set autoread
 au CursorHold * checktime
-colorscheme OceanicNext
+
+let ayucolor="dark"   " for dark version of theme
+colorscheme ayu
 
 " Remap
-nnoremap <C-n> :bnext<CR>
-nnoremap <C-p> :bprevious<CR>
+nnoremap <Right> :bnext<CR>
+nnoremap <Left> :bprevious<CR>
 
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+let mapleader = "\\"
+
+nnoremap <Leader>f <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+nnoremap <Leader>g <cmd>Telescope live_grep<cr>
+nnoremap <Leader>gd <cmd>Telescope lsp_definitions<cr>
+nnoremap <Leader>gr <cmd>Telescope lsp_references<cr>
+nnoremap <Leader>gi <cmd>Telescope lsp_implementations<cr>
+
+nnoremap <Leader>t :NvimTreeToggle<CR>
+
+noremap <Leader>y "*y
+noremap <Leader>p "*P
+noremap <Leader>Y "+y
+noremap <Leader>P "+P
+
+autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
+autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
 
 " Complex configs
 lua require("cmp_lsp")
 lua require("treesitter")
 lua require("nvim_tree")
-nnoremap <leader-t> :NvimTreeToggle<CR>
 
 " Simple configs
 lua << EOF
@@ -104,33 +119,17 @@ require'lualine'.setup {
 EOF
 lua require("bufferline").setup()
 
-let g:term_buf = 0
-let g:term_win = 0
-function! TermToggle(height)
-    if win_gotoid(g:term_win)
-        hide
-    else
-        botright new
-        exec "resize " . a:height
-        try
-            exec "buffer " . g:term_buf
-        catch
-            call termopen($SHELL, {"detach": 0})
-            let g:term_buf = bufnr("")
-            set nonumber
-            set norelativenumber
-            set signcolumn=no
-        endtry
-        startinsert!
-        let g:term_win = win_getid()
-    endif
+" Background colors for active vs inactive windows
+hi InactiveWindow guibg=#17252c
+hi ActiveWindow guibg=#0D1B22
+
+" Call method on window enter
+augroup WindowManagement
+  autocmd!
+  autocmd WinEnter * call Handle_Win_Enter()
+augroup END
+
+" Change highlight group of active/inactive windows
+function! Handle_Win_Enter()
+  setlocal winhighlight=Normal:ActiveWindow,NormalNC:InactiveWindow
 endfunction
-
-" Toggle terminal on/off (neovim)
-nnoremap <C-t> :call TermToggle(12)<CR>
-inoremap <C-t> <Esc>:call TermToggle(12)<CR>
-tnoremap <C-t> <C-\><C-n>:call TermToggle(12)<CR>
-
-" Terminal go back to normal mode
-tnoremap <Esc> <C-\><C-n>
-tnoremap :q! <C-\><C-n>:q!<CR>
