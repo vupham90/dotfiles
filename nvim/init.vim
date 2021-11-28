@@ -12,6 +12,7 @@ Plug 'hrsh7th/vim-vsnip'
 " Fuzzy search
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 " UI stuffs
 Plug 'nvim-lualine/lualine.nvim'
@@ -56,24 +57,33 @@ colorscheme ayu
 " Remap
 nnoremap <Right> :bnext<CR>
 nnoremap <Left> :bprevious<CR>
+nnoremap ; :
 
 let mapleader = "\\"
 
+" LSP
 nnoremap <Leader>f <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 nnoremap <Leader>g <cmd>Telescope live_grep<cr>
-nnoremap <Leader>gd <cmd>Telescope lsp_definitions<cr>
-nnoremap <Leader>gr <cmd>Telescope lsp_references<cr>
-nnoremap <Leader>gi <cmd>Telescope lsp_implementations<cr>
+nnoremap <Leader>d <cmd>Telescope lsp_definitions<cr>
+nnoremap <Leader>r <cmd>Telescope lsp_references<cr>
+nnoremap <Leader>i <cmd>Telescope lsp_implementations<cr>
+nnoremap <Leader>rn <cmd>lua vim.lsp.buf.rename()<cr>
 
+" NvimTree
 nnoremap <Leader>t :NvimTreeToggle<CR>
 
+" Copy/paste with clipboard
 noremap <Leader>y "*y
 noremap <Leader>p "*P
 noremap <Leader>Y "+y
 noremap <Leader>P "+P
 
+" Autoformat on save with LSP
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
+
+"Reload Nvim config
+nnoremap <Leader>sv :source $MYVIMRC<cr>
 
 " Complex configs
 lua require("cmp_lsp")
@@ -116,6 +126,18 @@ require'lualine'.setup {
   tabline = {},
   extensions = {}
 }
+require('telescope').setup {
+  extensions = {
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    }
+  }
+}
+require('telescope').load_extension('fzf')
 EOF
 lua require("bufferline").setup()
 
