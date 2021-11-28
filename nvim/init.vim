@@ -4,10 +4,18 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 
+" Autocomplete
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
-Plug 'hrsh7th/vim-vsnip'
+Plug 'onsails/lspkind-nvim'
+
+" Snippets
+Plug 'dcampos/nvim-snippy'
+Plug 'dcampos/cmp-snippy'
+Plug 'honza/vim-snippets'
+
+Plug 'fatih/vim-go'
 
 " Fuzzy search
 Plug 'nvim-lua/plenary.nvim'
