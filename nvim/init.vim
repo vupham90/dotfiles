@@ -49,12 +49,16 @@ set ruler
 set mouse=a
 set tabstop=4
 set shiftwidth=4
-set number relativenumber
+set number
+set relativenumber
+set hidden
 
 set termguicolors
 set lazyredraw
 set splitright
 set splitbelow
+
+set clipboard=unnamed,unnamedplus
 
 set autoread
 au CursorHold * checktime
@@ -62,36 +66,43 @@ au CursorHold * checktime
 let ayucolor="dark"   " for dark version of theme
 colorscheme ayu
 
-" Remap
-nnoremap <Right> :bnext<CR>
-nnoremap <Left> :bprevious<CR>
 nnoremap ; :
+vnoremap ; :
 
-let mapleader = "\\"
+" Panel & buffer navigation
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
+nmap <Up> <C-w><Up>
+nmap <Down> <C-w><Down>
+nmap <Left> <C-w><Left>
+nmap <Right> <C-w><Right>
 
-" LSP
-nnoremap <Leader>f <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
-nnoremap <Leader>g <cmd>Telescope live_grep<cr>
-nnoremap <Leader>d <cmd>Telescope lsp_definitions<cr>
-nnoremap <Leader>r <cmd>Telescope lsp_references<cr>
-nnoremap <Leader>i <cmd>Telescope lsp_implementations<cr>
+let mapleader = "\<Space>"
+
+" Jump
+nnoremap gd <cmd>Telescope lsp_definitions<cr>
+nnoremap gr <cmd>Telescope lsp_references<cr>
+nnoremap gi <cmd>Telescope lsp_implementations<cr>
+nnoremap gf <cmd>Telescope find_files<cr>
+nnoremap gs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+nnoremap gb <cmd>Telescope buffers<cr>
+nnoremap gt <cmd>Telescope live_grep<cr>
+nnoremap ggb <cmd>Telescope git_branches<cr>
+
+" Action
 nnoremap <Leader>rn <cmd>lua vim.lsp.buf.rename()<cr>
 
 " NvimTree
 nnoremap <Leader>t :NvimTreeToggle<CR>
-
-" Copy/paste with clipboard
-noremap <Leader>y "*y
-noremap <Leader>p "*P
-noremap <Leader>Y "+y
-noremap <Leader>P "+P
 
 " Autoformat on save with LSP
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
 
 "Reload Nvim config
-nnoremap <Leader>sv :source $MYVIMRC<cr>
+nnoremap <Leader>rl :source $MYVIMRC<cr>
+nnoremap <Leader>s :up<cr>
+nnoremap <Leader>w :q<cr>
 
 " Complex configs
 lua require("cmp_lsp")
@@ -135,18 +146,27 @@ require'lualine'.setup {
   extensions = {}
 }
 require('telescope').setup {
-  extensions = {
-    fzf = {
-      fuzzy = true,                    -- false will only do exact matching
-      override_generic_sorter = true,  -- override the generic sorter
-      override_file_sorter = true,     -- override the file sorter
-      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+	defaults = {
+		mappings = {
+			i = {
+				['<C-k>'] = require "telescope.actions".move_selection_previous,
+				['<C-j>'] = require "telescope.actions".move_selection_next,
+				["<Esc>"] = require "telescope.actions".close,}
+		}
+	},
+	extensions = {
+		fzf = {
+			fuzzy = true,                    -- false will only do exact matching
+			override_generic_sorter = true,  -- override the generic sorter
+			override_file_sorter = true,     -- override the file sorter
+			case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
                                        -- the default case_mode is "smart_case"
-    }
-  }
+		}
+	}
 }
 require('telescope').load_extension('fzf')
 EOF
+
 lua require("bufferline").setup()
 
 " Background colors for active vs inactive windows

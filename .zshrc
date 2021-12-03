@@ -5,7 +5,7 @@ defaults write -g KeyRepeat -int 1
 
 # Golang
 export PATH="/usr/local/opt/go@1.16/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
+export PATH="$HOME/.go/bin:$PATH"
 export GOPATH="$HOME/.go"
 export GOMODCACHE=$HOME/.go/pkg/mod
 

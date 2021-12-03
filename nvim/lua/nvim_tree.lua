@@ -1,11 +1,13 @@
+vim.g.nvim_tree_highlight_opened_files = 3
+
 require('nvim-tree').setup {
   disable_netrw       = true,
   hijack_netrw        = true,
   open_on_setup       = false,
   ignore_ft_on_setup  = {},
-  auto_close          = true,
+  auto_close          = false,
   open_on_tab         = false,
-  hijack_cursor       = false,
+  hijack_cursor       = true,
   update_cwd          = false,
   update_to_buf_dir   = {
     enable = true,
@@ -31,7 +33,7 @@ require('nvim-tree').setup {
   },
   filters = {
     dotfiles = false,
-    custom = { '.git', '.idea' }
+    custom = { '.git', '.idea', '.DS_Store' }
   },
   view = {
     width = 40,
