@@ -1,6 +1,6 @@
 call plug#begin('~/.config/nvim/plugged')
 
-" LSP & Autocomplete
+" LSP
 Plug 'neovim/nvim-lspconfig'
 Plug 'williamboman/nvim-lsp-installer'
 
@@ -11,8 +11,8 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'onsails/lspkind-nvim'
 
 " Snippets
-Plug 'dcampos/nvim-snippy'
-Plug 'dcampos/cmp-snippy'
+Plug 'SirVer/ultisnips'
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'honza/vim-snippets'
 
 Plug 'fatih/vim-go'
@@ -33,6 +33,8 @@ Plug 'tpope/vim-fugitive'
 
 " Syntax highlight
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'windwp/nvim-autopairs'
 
 " Just theme
 Plug 'ayu-theme/ayu-vim'
@@ -80,17 +82,18 @@ nmap <Right> <C-w><Right>
 let mapleader = "\<Space>"
 
 " Jump
-nnoremap gd <cmd>Telescope lsp_definitions<cr>
-nnoremap gr <cmd>Telescope lsp_references<cr>
-nnoremap gi <cmd>Telescope lsp_implementations<cr>
-nnoremap gf <cmd>Telescope find_files<cr>
-nnoremap gs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
-nnoremap gb <cmd>Telescope buffers<cr>
-nnoremap gt <cmd>Telescope live_grep<cr>
-nnoremap ggb <cmd>Telescope git_branches<cr>
+nnoremap fd <cmd>Telescope lsp_definitions<cr>
+nnoremap fr <cmd>Telescope lsp_references<cr><esc>
+nnoremap fi <cmd>Telescope lsp_implementations<cr><esc>
+nnoremap ff <cmd>Telescope find_files<cr>
+nnoremap fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+nnoremap fb <cmd>Telescope buffers<cr><esc>
+nnoremap ft <cmd>Telescope live_grep<cr>
+nnoremap ffb <cmd>Telescope git_branches<cr>
 
 " Action
 nnoremap <Leader>rn <cmd>lua vim.lsp.buf.rename()<cr>
+nnoremap <Leader>a <cmd>lua vim.lsp.buf.code_action()<cr>
 
 " NvimTree
 nnoremap <Leader>t :NvimTreeToggle<CR>
@@ -100,14 +103,14 @@ autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
 
 "Reload Nvim config
-nnoremap <Leader>rl :source $MYVIMRC<cr>
-nnoremap <Leader>s :up<cr>
-nnoremap <Leader>w :q<cr>
+nnoremap <C-r> :source $MYVIMRC<cr>
+nnoremap <C-s> :up<cr>
+nnoremap <C-q> :q<cr>
 
 " Complex configs
-lua require("cmp_lsp")
 lua require("treesitter")
 lua require("nvim_tree")
+lua require("cmp_lsp")
 
 " Simple configs
 lua << EOF
@@ -122,8 +125,13 @@ require'lualine'.setup {
   },
   sections = {
     lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff',
-                  {'diagnostics', sources={'nvim_lsp', 'coc'}}},
+    lualine_b = {
+		'branch',
+		'diff',
+        {
+			'diagnostics', sources={'nvim_lsp'}
+		}
+	},
     lualine_c = {
 		{
 			'filename',
@@ -164,10 +172,17 @@ require('telescope').setup {
 		}
 	}
 }
+
 require('telescope').load_extension('fzf')
+require("bufferline").setup()
+require('nvim-autopairs').setup({
+  disable_filetype = { "TelescopePrompt" },
+})
 EOF
 
-lua require("bufferline").setup()
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<C-l>"
+let g:UltiSnipsJumpBackwardTrigger="<C-h>"
 
 " Background colors for active vs inactive windows
 hi InactiveWindow guibg=#17252c
