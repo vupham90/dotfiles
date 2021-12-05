@@ -25,6 +25,7 @@ cmp.setup({
     format = require("lspkind").cmp_format({with_text = true, menu = ({
       buffer = "[Buffer]",
       nvim_lsp = "[LSP]",
+	  ultisnips = "[UltiSnips]",
     })}),
   },
 })
@@ -41,12 +42,3 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<Leader>fm', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 end
 
--- Attach cmp to lspconfig
-local capabilities = require('cmp_nvim_lsp').update_capabilities(
-  vim.lsp.protocol.make_client_capabilities()
-)
-require('lspconfig').gopls.setup {
-    cmd = {"gopls", "serve"},
-    capabilities = capabilities,
-    on_attach = on_attach,
-}
