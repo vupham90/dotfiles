@@ -30,7 +30,9 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'windwp/nvim-autopairs'
 " Just theme
 Plug 'ayu-theme/ayu-vim'
+" Dev tools
 Plug 'fatih/vim-go'
+Plug 'vupham90/protobuf.vim'
 call plug#end()
 
 lua << EOF
@@ -52,6 +54,7 @@ set path+=**
 set wildmenu
 set autoindent
 set smartindent
+filetype plugin indent on
 set incsearch
 set ruler
 set mouse=a
@@ -82,18 +85,28 @@ nmap <Down> <C-w><Down>
 nmap <Left> <C-w><Left>
 nmap <Right> <C-w><Right>
 
-nnoremap fd <cmd>Telescope lsp_definitions<cr>
-nnoremap fr <cmd>Telescope lsp_references<cr><esc>
-nnoremap fi <cmd>Telescope lsp_implementations<cr><esc>
-nnoremap ff <cmd>Telescope find_files<cr>
-nnoremap fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
-nnoremap fb <cmd>Telescope buffers<cr><esc>
-nnoremap ft <cmd>Telescope live_grep<cr>
-nnoremap fa <cmd>Telescope lsp_code_actions<cr><esc>
-nnoremap gb <cmd>Telescope git_branches<cr>
-
+" Find [D]efinitions
+nnoremap <Leader>d <cmd>Telescope lsp_definitions<cr>
+" Find [R]eferences
+nnoremap <Leader>r <cmd>Telescope lsp_references<cr><esc>
+" Find [I]mplementation
+nnoremap <Leader>i <cmd>Telescope lsp_implementations<cr><esc>
+" Find [F]ile
+nnoremap <Leader>f <cmd>Telescope find_files<cr>
+" Find [S]ymbol
+nnoremap <Leader>s <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+" Find [B]uffers
+nnoremap <Leader>b <cmd>Telescope buffers<cr><esc>
+" Find [T]ext
+nnoremap <Leader>t <cmd>Telescope live_grep<cr>
+" [A]ction
+nnoremap <Leader>a <cmd>Telescope lsp_code_actions<cr><esc>
+" Find [G]it [B]ranches
+nnoremap <Leader>gb <cmd>Telescope git_branches<cr>
+" [R]e[n]ame
 nnoremap <Leader>rn <cmd>lua vim.lsp.buf.rename()<cr>
-nnoremap <Leader>t :NvimTreeToggle<CR>
+" [N]vim[T]ree
+nnoremap <Leader>nt :NvimTreeToggle<CR>
 
 " Autoformat on save with LSP
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
@@ -104,7 +117,6 @@ nnoremap <C-r> :source $MYVIMRC<cr>
 nnoremap <C-s> :up<cr>
 nnoremap <C-q> :q<cr>
 
-let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<C-l>"
 let g:UltiSnipsJumpBackwardTrigger="<C-h>"
 
