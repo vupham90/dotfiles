@@ -11,6 +11,7 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_SAVE_NO_DUPS
 
 source ${ZSHDIR}/zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ${ZSHDIR}/zsh/zsh-fzf-history-search/zsh-fzf-history-search.zsh
 
 # Increase key repeat rate
 defaults write -g KeyRepeat -int 1
@@ -35,5 +36,5 @@ export FZF_DEFAULT_OPTS='--height 20% --layout reverse --border vertical'
 fh() {
   eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -E 's/ *[0-9]*\*? *//' | sed -E 's/\\/\\\\/g')
 }
-zle -N fh fh
-bindkey '^R' fh
+#zle -N fh fh
+#bindkey '^R' fh

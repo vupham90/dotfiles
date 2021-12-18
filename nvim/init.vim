@@ -115,6 +115,7 @@ autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
 "Reload Nvim config
 nnoremap <C-r> :source $MYVIMRC<cr>
 nnoremap <C-s> :up<cr>
+inoremap <C-s> <Esc>:up<cr>
 nnoremap <C-q> :q<cr>
 
 let g:UltiSnipsJumpForwardTrigger="<C-l>"

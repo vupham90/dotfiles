@@ -4,3 +4,6 @@
 [submodule "zsh/zsh-autocomplete"]
 	path = zsh/zsh-autocomplete
 	url = https://github.com/marlonrichert/zsh-autocomplete
+[submodule "zsh-fzf-history-search"]
+	path = zsh-fzf-history-search
+	url = https://github.com/joshskidmore/zsh-fzf-history-search
