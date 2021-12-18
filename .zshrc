@@ -30,3 +30,10 @@ export SP_UNIX_SOCKET=/tmp/spex.sock
 
 alias spexssh='socat -d -d -d UNIX-LISTEN:/tmp/spex.sock,reuseaddr,fork TCP:agent-tcp.spex.test.shopee.io:9299'
 alias mysqllog='docker ps | grep mysql | grep -o "[a-z0-9]*" | xargs docker logs'
+
+export FZF_DEFAULT_OPTS='--height 20% --layout reverse --border vertical'
+fh() {
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed -E 's/ *[0-9]*\*? *//' | sed -E 's/\\/\\\\/g')
+}
+zle -N fh fh
+bindkey '^R' fh
