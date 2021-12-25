@@ -33,6 +33,7 @@ Plug 'ayu-theme/ayu-vim'
 " Dev tools
 Plug 'fatih/vim-go'
 Plug 'vupham90/protobuf.vim'
+Plug 'akinsho/toggleterm.nvim'
 call plug#end()
 
 lua << EOF
@@ -48,6 +49,10 @@ require("bufferline").setup()
 require('nvim-autopairs').setup({
   disable_filetype = { "TelescopePrompt" },
 })
+require('toggleterm').setup {
+	size = 10,
+	start_in_insert = true,
+}
 EOF
 
 set path+=**
@@ -85,28 +90,33 @@ nmap <Down> <C-w><Down>
 nmap <Left> <C-w><Left>
 nmap <Right> <C-w><Right>
 
-" Find [D]efinitions
 nnoremap <Leader>d <cmd>Telescope lsp_definitions<cr>
-" Find [R]eferences
 nnoremap <Leader>r <cmd>Telescope lsp_references<cr><esc>
-" Find [I]mplementation
 nnoremap <Leader>i <cmd>Telescope lsp_implementations<cr><esc>
-" Find [F]ile
-nnoremap <Leader>f <cmd>Telescope find_files<cr>
-" Find [S]ymbol
-nnoremap <Leader>s <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
-" Find [B]uffers
-nnoremap <Leader>b <cmd>Telescope buffers<cr><esc>
-" Find [T]ext
-nnoremap <Leader>t <cmd>Telescope live_grep<cr>
-" [A]ction
-nnoremap <Leader>a <cmd>Telescope lsp_code_actions<cr><esc>
-" Find [G]it [B]ranches
+
+nnoremap <Leader>ff <cmd>Telescope find_files<cr>
+nnoremap <Leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
+nnoremap <Leader>fb <cmd>Telescope buffers<cr><esc>
+nnoremap <Leader>ft <cmd>Telescope live_grep<cr>
+nnoremap <Leader>aa <cmd>Telescope lsp_code_actions<cr><esc>
+nnoremap <Leader>ar <cmd>lua vim.lsp.buf.rename()<cr>
+
 nnoremap <Leader>gb <cmd>Telescope git_branches<cr>
-" [R]e[n]ame
-nnoremap <Leader>rn <cmd>lua vim.lsp.buf.rename()<cr>
-" [N]vim[T]ree
+nnoremap <Leader>gc <cmd>Telescope git_commits<cr>
+nnoremap <Leader>gp <cmd>:Git pull<cr>
+nnoremap <Leader>gf <cmd>:Git fetch<cr>
+nnoremap <Leader>gt <cmd>:Telescope git_status<cr>
+nnoremap <Leader>gg :Git 
+
+nnoremap <Leader>yp <cmd>:let @+ = expand("%")<cr>
+nnoremap <Leader>yl <cmd>:let @+=expand("%") . ':' . line(".")<cr>
+
 nnoremap <Leader>nt :NvimTreeToggle<CR>
+nnoremap <Leader>nr :NvimTreeRefresh<CR>
+
+let g:toggleterm_terminal_mapping = '<leader>tt'
+nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
+inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
 
 " Autoformat on save with LSP
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
