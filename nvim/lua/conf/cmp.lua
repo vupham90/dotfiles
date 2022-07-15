@@ -12,7 +12,7 @@ cmp.setup({
     ['<C-l>'] = cmp.mapping.complete(),
     ['<C-h>'] = cmp.mapping.close(),
     ['<CR>'] = cmp.mapping.confirm({
-        behavior = cmp.ConfirmBehavior.Replace,
+        behavior = cmp.ConfirmBehavior.Insert,
         select = true,
     })
   },

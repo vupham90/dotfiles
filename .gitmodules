@@ -7,3 +7,6 @@
 [submodule "zsh-fzf-history-search"]
 	path = zsh-fzf-history-search
 	url = https://github.com/joshskidmore/zsh-fzf-history-search
+[submodule "tmux/vim-tmux-navigator"]
+	path = tmux/vim-tmux-navigator
+	url = https://github.com/christoomey/vim-tmux-navigator

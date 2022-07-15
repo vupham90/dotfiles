@@ -33,7 +33,7 @@ Plug 'ayu-theme/ayu-vim'
 " Dev tools
 Plug 'fatih/vim-go'
 Plug 'vupham90/protobuf.vim'
-Plug 'akinsho/toggleterm.nvim'
+Plug 'christoomey/vim-tmux-navigator'
 call plug#end()
 
 lua << EOF
@@ -49,12 +49,8 @@ require("bufferline").setup()
 require('nvim-autopairs').setup({
   disable_filetype = { "TelescopePrompt" },
 })
-require('toggleterm').setup {
-	size = 10,
-	start_in_insert = true,
-}
 EOF
-
+ 
 set path+=**
 set wildmenu
 set autoindent
@@ -85,10 +81,6 @@ vnoremap ; :
 
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
-nmap <Up> <C-w><Up>
-nmap <Down> <C-w><Down>
-nmap <Left> <C-w><Left>
-nmap <Right> <C-w><Right>
 
 nnoremap <Leader>d <cmd>Telescope lsp_definitions<cr>
 nnoremap <Leader>r <cmd>Telescope lsp_references<cr><esc>
@@ -97,6 +89,7 @@ nnoremap <Leader>i <cmd>Telescope lsp_implementations<cr><esc>
 nnoremap <Leader>ff <cmd>Telescope find_files<cr>
 nnoremap <Leader>fs <cmd>Telescope lsp_dynamic_workspace_symbols<cr>
 nnoremap <Leader>fb <cmd>Telescope buffers<cr><esc>
+nnoremap <Leader>fib <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <Leader>ft <cmd>Telescope live_grep<cr>
 nnoremap <Leader>aa <cmd>Telescope lsp_code_actions<cr><esc>
 nnoremap <Leader>ar <cmd>lua vim.lsp.buf.rename()<cr>
@@ -114,10 +107,6 @@ nnoremap <Leader>yl <cmd>:let @+=expand("%") . ':' . line(".")<cr>
 nnoremap <Leader>nt :NvimTreeToggle<CR>
 nnoremap <Leader>nr :NvimTreeRefresh<CR>
 
-let g:toggleterm_terminal_mapping = '<leader>tt'
-nnoremap <silent><c-t> <Cmd>exe v:count1 . "ToggleTerm"<CR>
-inoremap <silent><c-t> <Esc><Cmd>exe v:count1 . "ToggleTerm"<CR>
-
 " Autoformat on save with LSP
 autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
 autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
@@ -126,10 +115,10 @@ autocmd BufWritePre *.go.in lua vim.lsp.buf.formatting_sync(nil, 1000)
 nnoremap <C-r> :source $MYVIMRC<cr>
 nnoremap <C-s> :up<cr>
 inoremap <C-s> <Esc>:up<cr>
-nnoremap <C-q> :q<cr>
+nnoremap <C-d> :q<cr>
 
-let g:UltiSnipsJumpForwardTrigger="<C-l>"
-let g:UltiSnipsJumpBackwardTrigger="<C-h>"
+let g:UltiSnipsJumpForwardTrigger="<C-n>"
+let g:UltiSnipsJumpBackwardTrigger="<C-p>"
 
 " Background colors for active vs inactive windows
 hi InactiveWindow guibg=#17252c
